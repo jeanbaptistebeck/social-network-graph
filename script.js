@@ -14,12 +14,12 @@ const data = {
         { id: "Eve" }
     ],
     links: [
-        { source: "Alice", target: "Bob" },
-        { source: "Alice", target: "Charlie" },
-        { source: "Bob", target: "Charlie" },
-        { source: "Bob", target: "David" },
-        { source: "Charlie", target: "David" },
-        { source: "David", target: "Eve" }
+        { source: "Alice", target: "Bob", comment: "Friends since college" },
+        { source: "Alice", target: "Charlie", comment: "Co-workers" },
+        { source: "Bob", target: "Charlie", comment: "Neighbors" },
+        { source: "Bob", target: "David", comment: "Gym buddies" },
+        { source: "Charlie", target: "David", comment: "Cousins" },
+        { source: "David", target: "Eve", comment: "Siblings" }
     ]
 };
 
@@ -50,6 +50,16 @@ node.append("text")
     .attr("dy", ".35em")
     .text(d => d.id);
 
+const labels = svg.append("g")
+    .attr("class", "labels")
+    .selectAll("text")
+    .data(data.links)
+    .enter().append("text")
+    .attr("class", "label")
+    .attr("font-size", 10)
+    .attr("fill", "#555")
+    .text(d => d.comment);
+
 simulation.on("tick", () => {
     link
         .attr("x1", d => d.source.x)
@@ -59,4 +69,8 @@ simulation.on("tick", () => {
 
     node
         .attr("transform", d => `translate(${d.x},${d.y})`);
+
+    labels
+        .attr("x", d => (d.source.x + d.target.x) / 2)
+        .attr("y", d => (d.source.y + d.target.y) / 2);
 });
